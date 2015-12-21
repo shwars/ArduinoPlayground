@@ -3,11 +3,8 @@
 
 RTC_DS1307 RTC;
 
-void setup() {
-  // put your setup code here, to run once:
-  Serial.begin(115200);
-  Wire.begin();
-  RTC.begin();
+void EnsureRTCisSet()
+{
   if (!RTC.isrunning())
   {
     Serial.println("Setting the time");
@@ -15,20 +12,24 @@ void setup() {
   }
 }
 
+int i=0,cnt=0;
+
+void setup() {
+  // put your setup code here, to run once:
+  Serial.begin(115200);
+  Wire.begin();
+  RTC.begin();
+  EnsureRTCisSet();
+  InitLEDMatrix();
+  SetPixel(0,0,true);
+  for (int i=0;i<16;i++) SetPixel(i,i,true);
+}
+
 void loop() {
   // put your main code here, to run repeatedly:
-  DateTime now = RTC.now();
-    Serial.print(now.year(), DEC);
-    Serial.print('/');
-    Serial.print(now.month(), DEC);
-    Serial.print('/');
-    Serial.print(now.day(), DEC);
-    Serial.print(' ');
-    Serial.print(now.hour(), DEC);
-    Serial.print(':');
-    Serial.print(now.minute(), DEC);
-    Serial.print(':');
-    Serial.print(now.second(), DEC);
-    Serial.println();
-    delay(3000);
+    DateTime now = RTC.now();
+    Refresh();
+    cnt=(cnt+1)%100;
 }
+
+
