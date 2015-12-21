@@ -113,7 +113,7 @@ void Refresh()
     delayMicroseconds(1);
     Scan_Line(i);
     digitalWrite(LEDARRAY_G, LOW);
-    delayMicroseconds(100);;
+    delayMicroseconds(500);;
   } 
 }
 
@@ -228,6 +228,11 @@ void StartScroll(char dir)
     }
 }
 
+bool isScrolling()
+{
+  return !(scroll_left==0 && scroll_dir==0);
+}
+
 void LEDloop()
 {
     Refresh();
@@ -238,7 +243,7 @@ void LEDloop()
          Serial.println(scroll_dir);
          scroll_left--;
          DisplayBuffer+=scroll_dir*2;
-         scroll_delay=5;
+         scroll_delay=3;
       }
       else
       {
