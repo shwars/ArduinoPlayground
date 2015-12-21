@@ -30,6 +30,15 @@ void loop() {
     DateTime now = RTC.now();
     Refresh();
     cnt=(cnt+1)%100;
+    if (cnt==0)
+    {
+      i++;
+      int t = i;
+      for (int k=2;k>=0;k--)
+      {
+         DisplayDigit(t%10,k*5,3);
+      }
+    }
 }
 
 
