@@ -12,6 +12,8 @@
 
 #define MAXDISPLAYS 4
 
+const bool transpose = true;
+
 unsigned char ScreenBuffer[32*MAXDISPLAYS]; // Screen buffer memory
 unsigned char* DisplayBuffer; // Buffer being displayed on screen
 unsigned char* CurrentBuffer; // Buffer being manipulated by routines
@@ -39,8 +41,17 @@ void ClearDisplay()
 
 void SetPixel(byte x, byte y, bool onoff)
 {
-  byte no = y*2+x/8;
-  byte m = getMask(7-x%8);
+  byte no,m;
+  if (transpose)
+  {
+    no = (15-x)*2+y/8;
+    m = getMask(7-y%8);
+  }
+  else
+  {
+    no = y*2+x/8;
+    m = getMask(7-x%8);    
+  }
   if (onoff) CurrentBuffer[no] |= m;
   else CurrentBuffer[no] &= ~m;
 }

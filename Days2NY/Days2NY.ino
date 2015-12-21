@@ -21,6 +21,15 @@ void setup() {
   RTC.begin();
   EnsureRTCisSet();
   InitLEDMatrix();
+  SetCurrentBuffer(0);
+  for (int i=0;i<16;i++)
+  {
+    SetPixel(i,0,true); SetPixel(i,15,true);
+  }
+  for (int i=0;i<16;i++)
+  {
+    SetPixel(0,i,true); SetPixel(15,i,true);
+  }
 }
 
 void disp(int t)
