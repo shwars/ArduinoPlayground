@@ -38,6 +38,30 @@ void SetPixel(byte x, byte y, bool onoff)
   else DisplayBuffer[no] &= ~m;
 }
 
+void Fill(byte x, byte y, byte w, byte h, bool onoff)
+{
+  for (byte i=0; i<w; i++)
+     for (byte j=0;j<h; j++)
+        SetPixel(x+i,y+j,onoff);
+}
+
+void ByteLine(byte x, byte y, int w, byte l)
+{
+   for (byte i=w;i>0;i--)
+   {
+      SetPixel(x+i-1,y,l%2);
+      l>>=1;
+   }
+}
+
+void DisplaySprite(int x, int y, int w, int h, byte[] buf)
+{
+  for (byte i=0;i<h;i++)
+  {
+     ByteLine(x,y+i,w,buf[i]);
+  }
+}
+
 byte getMask(byte n)
 {
   byte res = 1;
