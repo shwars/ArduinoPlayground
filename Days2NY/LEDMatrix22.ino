@@ -27,7 +27,12 @@ void InitLEDMatrix()
   pinMode(LEDARRAY_DI, OUTPUT);
   pinMode(LEDARRAY_CLK, OUTPUT);
   pinMode(LEDARRAY_LAT, OUTPUT);
-  for(int i=0;i<32;i++) DisplayBuffer[i] = 0;  
+  ClearDisplay();
+}
+
+void ClearDisplay()
+{
+    for(int i=0;i<32;i++) DisplayBuffer[i] = 0;  
 }
 
 void SetPixel(byte x, byte y, bool onoff)
@@ -45,7 +50,7 @@ void Fill(byte x, byte y, byte w, byte h, bool onoff)
         SetPixel(x+i,y+j,onoff);
 }
 
-void ByteLine(byte x, byte y, int w, byte l)
+void BitLine(byte x, byte y, int w, int l)
 {
    for (byte i=w;i>0;i--)
    {
@@ -54,13 +59,22 @@ void ByteLine(byte x, byte y, int w, byte l)
    }
 }
 
-void DisplaySprite(int x, int y, int w, int h, byte[] buf)
+void DisplaySprite8(int x, int y, int w, int h, byte* buf)
 {
   for (byte i=0;i<h;i++)
   {
-     ByteLine(x,y+i,w,buf[i]);
+     BitLine(x,y+i,w,buf[i]);
   }
 }
+
+void DisplaySprite16(int x, int y, int w, int h, int* buf)
+{
+  for (byte i=0;i<h;i++)
+  {
+     BitLine(x,y+i,w,buf[i]);
+  }
+}
+
 
 byte getMask(byte n)
 {
