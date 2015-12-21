@@ -10,12 +10,13 @@
 #define LEDARRAY_CLK 8
 #define LEDARRAY_LAT 9
 
-unsigned char DisplayBuffer[32];
+#define MAXDISPLAYS 4
 
-unsigned char *GetBuffer()
-{
-  return DisplayBuffer;
-}
+unsigned char ScreenBuffer[32*MAXDISPLAYS]; // Screen buffer memory
+unsigned char* DisplayBuffer; // Buffer being displayed on screen
+unsigned char* CurrentBuffer; // Buffer being manipulated by routines
+
+unsigned char* GetBuf() { return ScreenBuffer; }
 
 void InitLEDMatrix()
 {
@@ -27,20 +28,21 @@ void InitLEDMatrix()
   pinMode(LEDARRAY_DI, OUTPUT);
   pinMode(LEDARRAY_CLK, OUTPUT);
   pinMode(LEDARRAY_LAT, OUTPUT);
+  SetDisplay(0);
   ClearDisplay();
 }
 
 void ClearDisplay()
 {
-    for(int i=0;i<32;i++) DisplayBuffer[i] = 0;  
+    for(int i=0;i<32;i++) CurrentBuffer[i] = 0;  
 }
 
 void SetPixel(byte x, byte y, bool onoff)
 {
-  byte no = x+16*(y/8);
-  byte m = getMask(y%8);
-  if (onoff) DisplayBuffer[no] |= m;
-  else DisplayBuffer[no] &= ~m;
+  byte no = y*2+x/8;
+  byte m = getMask(7-x%8);
+  if (onoff) CurrentBuffer[no] |= m;
+  else CurrentBuffer[no] &= ~m;
 }
 
 void Fill(byte x, byte y, byte w, byte h, bool onoff)
@@ -87,20 +89,20 @@ void Refresh()
 {
   unsigned char i;
   unsigned char db0, db1;
-  for( i = 0 ; i < 16 ; i++ )
+  for( i = 0 ; i < 16 ; i+=1 )
   {
     digitalWrite(LEDARRAY_G, HIGH);
-    db0 = ~DisplayBuffer[i];    
-    db1 = ~DisplayBuffer[i+16];
-    Send(db0);
+    db0 = ~DisplayBuffer[2*i];    
+    db1 = ~DisplayBuffer[2*i+1];
     Send(db1);
+    Send(db0);
     digitalWrite(LEDARRAY_LAT, HIGH);   
     delayMicroseconds(1);
     digitalWrite(LEDARRAY_LAT, LOW);
     delayMicroseconds(1);
     Scan_Line(i);
     digitalWrite(LEDARRAY_G, LOW);
-    delayMicroseconds(200);;
+    delayMicroseconds(100);;
   } 
 }
 
@@ -184,5 +186,57 @@ void Send(unsigned char dat)
     delayMicroseconds(1);   
     dat >>= 1;  
   }     
+}
+
+void SetCurrentBuffer(byte no)
+{
+  CurrentBuffer = ScreenBuffer+no*32;
+}
+
+void SetDisplayBuffer(byte no)
+{
+  DisplayBuffer = ScreenBuffer+no*32;
+}
+
+void SetDisplay(byte no)
+{
+   SetCurrentBuffer(no);
+   SetDisplayBuffer(no);
+}
+
+char scroll_dir = 0;
+byte scroll_left = 0;
+byte scroll_delay = 0;
+
+void StartScroll(char dir)
+{
+    if (scroll_left==0 && scroll_dir==0)
+    {
+      scroll_left = 16;
+      scroll_dir = dir;
+    }
+}
+
+void LEDloop()
+{
+    Refresh();
+    if (scroll_left!=0)
+    {
+      if (scroll_delay==0)
+      {
+         Serial.println(scroll_dir);
+         scroll_left--;
+         DisplayBuffer+=scroll_dir*2;
+         scroll_delay=5;
+      }
+      else
+      {
+         scroll_delay--;
+      }
+    }
+    else
+    {
+      scroll_dir = scroll_delay = 0;
+    }
 }
 
