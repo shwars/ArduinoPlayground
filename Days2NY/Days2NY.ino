@@ -21,22 +21,21 @@ void setup() {
   RTC.begin();
   EnsureRTCisSet();
   InitLEDMatrix();
-  SetPixel(0,0,true);
-  for (int i=0;i<16;i++) SetPixel(i,i,true);
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
     DateTime now = RTC.now();
     Refresh();
-    cnt=(cnt+1)%100;
+    cnt=(cnt+1)%50;
     if (cnt==0)
     {
       i++;
       int t = i;
       for (int k=2;k>=0;k--)
       {
-         DisplayDigit(t%10,k*5,3);
+         DisplayDigit(t%10,1+k*5,3);
+         t/=10;
       }
     }
 }
