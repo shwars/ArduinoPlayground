@@ -63,7 +63,7 @@ void Fill(byte x, byte y, byte w, byte h, bool onoff)
         SetPixel(x+i,y+j,onoff);
 }
 
-void BitLine(byte x, byte y, int w, int l)
+void BitLine(byte x, byte y, int w, unsigned int l)
 {
    for (byte i=w;i>0;i--)
    {
@@ -72,7 +72,7 @@ void BitLine(byte x, byte y, int w, int l)
    }
 }
 
-void DisplaySprite8(int x, int y, int w, int h, byte* buf)
+void DisplaySprite8(int x, int y, int w, int h, const byte* buf)
 {
   for (byte i=0;i<h;i++)
   {
@@ -80,7 +80,7 @@ void DisplaySprite8(int x, int y, int w, int h, byte* buf)
   }
 }
 
-void DisplaySprite16(int x, int y, int w, int h, int* buf)
+void DisplaySprite16(int x, int y, int w, int h, const unsigned int* buf)
 {
   for (byte i=0;i<h;i++)
   {
@@ -243,7 +243,7 @@ void LEDloop()
          Serial.println(scroll_dir);
          scroll_left--;
          DisplayBuffer+=scroll_dir*2;
-         scroll_delay=3;
+         scroll_delay=0;
       }
       else
       {

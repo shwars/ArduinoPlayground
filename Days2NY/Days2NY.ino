@@ -14,7 +14,7 @@ void EnsureRTCisSet()
   }
 }
 
-int i=0,cnt=0,scrcnt=0,scrdir=1;
+int i=0,cnt=0,scrcnt=0,scrdir=1,screen=0;
 
 void setup() {
   // put your setup code here, to run once:
@@ -23,6 +23,9 @@ void setup() {
   RTC.begin();
   EnsureRTCisSet();
   InitLEDMatrix();
+  setupPics();
+  SetCurrentBuffer(2);
+  DrawXMas();
   SetCurrentBuffer(0);
   /* draw frame ---
   for (int i=0;i<16;i++)
@@ -66,6 +69,7 @@ void loop() {
   // put your main code here, to run repeatedly:
     DateTime now = RTC.now();
     LEDloop();
+    loopPics();
     cnt=(cnt+1)%20;
     if (cnt==0)
     {
@@ -94,11 +98,13 @@ void loop() {
       SetPixel(7,7,i%2);
       SetPixel(8,7,i%2);
     }
-    scrcnt=(scrcnt+1)%500;
+    scrcnt=(scrcnt+1)%300;
     if (scrcnt==0)
     {
       StartScroll(scrdir);
-      scrdir*=-1;
+      screen+=scrdir;
+      if (screen==2) scrdir = -1;
+      if (screen==0) scrdir = 1;
     }
 }
 

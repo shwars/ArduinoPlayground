@@ -1,4 +1,4 @@
-byte DIGITS47[] = {
+const byte DIGITS47[] = {
   B1111, B1001, B1001, B1001, B1001, B1001, B1111,
   B0011, B0111, B1101, B0001, B0001, B0001, B0001,
   B1111, B0001, B0001, B1111, B1000, B1000, B1111,
@@ -16,7 +16,7 @@ void DisplayDigit47(byte d, byte x, byte y)
   DisplaySprite8(x,y,4,7,DIGITS47+d*7);
 }
 
-byte DIGITS37[] = {
+const byte DIGITS37[] = {
   B111, B101, B101, B101, B101, B101, B111,
   B001, B001, B001, B001, B001, B001, B001,
   B111, B001, B001, B111, B100, B100, B111,
