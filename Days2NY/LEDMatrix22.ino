@@ -30,8 +30,11 @@ void InitLEDMatrix()
   pinMode(LEDARRAY_DI, OUTPUT);
   pinMode(LEDARRAY_CLK, OUTPUT);
   pinMode(LEDARRAY_LAT, OUTPUT);
+  for (int i=0;i<32*MAXDISPLAYS;i++)
+  {
+    ScreenBuffer[i]=0;
+  }
   SetDisplay(0);
-  ClearDisplay();
 }
 
 void ClearDisplay()

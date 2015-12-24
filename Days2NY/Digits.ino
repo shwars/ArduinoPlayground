@@ -34,3 +34,21 @@ void DisplayDigit37(byte d, byte x, byte y)
   DisplaySprite8(x,y,3,7,DIGITS37+d*7);
 }
 
+const byte DIGITS35[] = {
+  B111, B101, B101, B101, B111,
+  B001, B001, B001, B001, B001,
+  B111, B001, B111, B100, B111,
+  B111, B001, B111, B001, B111,
+  B101, B101, B111, B001, B001,
+  B111, B100, B111, B001, B111,
+  B111, B100, B111, B101, B111,
+  B111, B001, B001, B001, B001,
+  B111, B101, B111, B101, B111,
+  B111, B101, B111, B001, B111
+};
+
+void DisplayDigit35(byte d, byte x, byte y)
+{
+  DisplaySprite8(x,y,3,5,DIGITS35+d*5);
+}
+

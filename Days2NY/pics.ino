@@ -45,7 +45,7 @@ byte ensure16(byte x)
 
 void loopPics()
 {
-  SetCurrentBuffer(2);
+  SetCurrentBuffer(1);
   DrawXMas();
   for(byte i=0;i<NOSNOWF;i++)
   {
@@ -61,4 +61,19 @@ void loopPics()
      }
   }
 }
+
+
+const unsigned int HRSL[] = {
+  256*B1000111+B01110100,
+  256*B1000100+B01001110,
+  256*B1000110+B01100100,
+  256*B1000100+B01000100,
+  256*B1110111+B01000110
+};
+
+void DrawLeft()
+{
+  DisplaySprite16(1,9,15,5,HRSL);
+}
+
 
