@@ -1,9 +1,7 @@
 #include <RTClib.h>
 #include <Wire.h>
 
-// DateTime NY(2015,12,31,23,59,59);
-
-DateTime NY(2015,12,31,00,30,59);
+DateTime NY(2015,12,31,23,59,59);
 
 RTC_DS1307 RTC;
 
@@ -76,11 +74,13 @@ void testloop()
 }
 
 TimeSpan ts;
+bool show_fw=false;
 void loop() {
   // put your main code here, to run repeatedly:
     DateTime now = RTC.now();
     LEDloop();
     loopPics();
+    if(show_fw) loopFW();
     cnt=(cnt+1)%20;
     if (cnt==0)
     {
@@ -90,13 +90,14 @@ void loop() {
       {
          ts = NY-now;
          disp(ts.hours()+24*ts.days());
-         DrawLeft();   
+         DrawLeft();  
+         show_fw=false; 
       }
       else
       {
          ts = now-NY;
          disp(ts.hours()+24*ts.days());
-         loopFW();
+         show_fw=true;
       }
       if (!isScrolling())
       {
@@ -125,7 +126,7 @@ void loop() {
       SetPixel(8,13,true);
       SetPixel(9,13,true);      
     }
-    scrcnt=(scrcnt+1)%500;
+    scrcnt=(scrcnt+1)%210;
     if (scrcnt==0)
     {
       StartScroll(scrdir);

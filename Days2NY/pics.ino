@@ -75,49 +75,30 @@ void DrawLeft()
   DisplaySprite16(1,9,15,5,HRSL);
 }
 
-// Fireworks
-int fwcx = 7, fwcy = 10; // center of fireworks
-const int no_dots = 20;
-byte fwx[no_dots], fwy[no_dots];
-byte fsx[no_dots], fsy[no_dots], fss[no_dots], fsc[no_dots];
-
-void resetPoint(byte i)
-{
-    fwx[i]=fwcx; fwy[i]=fwcy;
-    fsx[i]=fsy[i]=0;
-    while (fsx[i]==0 && fsy[i]==0)
-    {
-      fsx[i]=random(-1,2); fsy[i]=random(-1,2);
-      fss[i]=fsc[i]=random(0,2);
-    }
-}
+// Fireworks 
+char coord[14],spd[14],spdv[14],spdc[14];
 
 void resetFW()
 {
-  for (byte i=0;i<no_dots;i++)
+  for (byte i=0;i<14;i++)
   {
-    resetPoint(i);
+    coord[i]=9;
+    spd[i]=1;
+    spdv[i]=spdc[i]=random(2,50);
   }
 }
 
 void loopFW()
 {
-  for (byte i=0;i<no_dots;i++)
+  SetCurrentBuffer(0);
+  for (byte i=0;i<14;i++)
   {
-    if (0==fsc[i]--)
+    if (0==spdc[i]--)
     {
-      fsc[i]=fss[i];
-      SetPixel(fwx[i],fwy[i],false);
-      fwx[i]+=fsx[i]; fwy[i]+=fsy[i];
-      if (fwy[i]<8 || fwy[i]>15 || fwx[i]<0 || fwx[i]>15)
-      {
-         //resetFW();
-         resetPoint(i);
-      }
-      else
-      {
-         SetPixel(fwx[i],fwy[i],true);
-      }
+      spdc[i]=spdv[i];
+      SetPixel(i+1,coord[i],spd[i]>0);
+      coord[i]+=spd[i];
+      if (coord[i]>13 || coord[i]<10) spd[i]=-spd[i];
     }
   }
 }
