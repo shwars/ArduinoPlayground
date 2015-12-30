@@ -1,7 +1,9 @@
 #include <RTClib.h>
 #include <Wire.h>
 
-DateTime NY(2015,12,31,23,59,59);
+// DateTime NY(2015,12,31,23,59,59);
+
+DateTime NY(2015,12,31,00,30,59);
 
 RTC_DS1307 RTC;
 
@@ -27,6 +29,7 @@ void setup() {
   SetCurrentBuffer(1);
   DrawXMas();
   SetCurrentBuffer(0);
+  resetFW();
   /* draw frame ---
   for (int i=0;i<16;i++)
   {
@@ -72,6 +75,7 @@ void testloop()
     }
 }
 
+TimeSpan ts;
 void loop() {
   // put your main code here, to run repeatedly:
     DateTime now = RTC.now();
@@ -82,8 +86,18 @@ void loop() {
     {
       i++;
       SetCurrentBuffer(0);
-      TimeSpan ts = NY-now;
-      disp(ts.hours()+24*ts.days());
+      if (NY.unixtime()>now.unixtime())
+      {
+         ts = NY-now;
+         disp(ts.hours()+24*ts.days());
+         DrawLeft();   
+      }
+      else
+      {
+         ts = now-NY;
+         disp(ts.hours()+24*ts.days());
+         loopFW();
+      }
       if (!isScrolling())
       {
         int n = ts.minutes()*16/60;
@@ -93,7 +107,6 @@ void loop() {
       {
         for (int i=0;i<16;i++) SetPixel(i,14,false);      
       }
-      DrawLeft();
       SetCurrentBuffer(2);
       disp2(0,1,now.hour());
       disp2(9,1,now.minute());
@@ -118,7 +131,11 @@ void loop() {
       StartScroll(scrdir);
       screen+=scrdir;
       if (screen==2) scrdir = -1;
-      if (screen==0) scrdir = 1;
+      if (screen==0)
+      {
+        scrdir = 1;
+        resetFW();
+      }
     }
 }
 
