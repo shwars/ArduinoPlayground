@@ -1,13 +1,13 @@
 #include <RTClib.h>
 #include <Wire.h>
 
-DateTime NY(2015,12,31,23,59,59);
+DateTime NY(2016,12,31,23,59,59);
 
 RTC_DS1307 RTC;
 
 void EnsureRTCisSet()
 {
-  if (!RTC.isrunning())
+  if (RTC.isrunning())
   {
     Serial.println("Setting the time");
     RTC.adjust(DateTime(__DATE__, __TIME__));
