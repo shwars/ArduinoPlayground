@@ -16,17 +16,17 @@ void setup() {
 // Light hour LED #n with intensity x
 void hr_led(int n, int x)
 {
-   strip.setPixelColor(n%12,strip.Color(x,0,0));
+   strip.setPixelColor(n%12,strip.Color(x,0,0) | strip.getPixelColor(n%12));
 }
 
 void mn_led(int n, int x)
 {
-   strip.setPixelColor(n%24+12,strip.Color(0,0,x));
+   strip.setPixelColor(n%24+12,strip.Color(0,0,x) | strip.getPixelColor(n%24+12));
 }
 
 void sc_led(int n, int x)
 {
-   strip.setPixelColor(n%24+12,strip.Color(0,x,0));
+   strip.setPixelColor(n%24+12,strip.Color(0,x,0) | strip.getPixelColor(n%24+12));
 }
 
 
@@ -45,8 +45,8 @@ void hr_disp(int hr, int mn, int sc)
 
 void mn_disp(int mn, int sc)
 {
-   int x = (int)(pow(128,sc/60.0));
-   int y = (int)(pow(128,(60.0-sc)/60.0));
+   int x = (int)(pow(128,sc/24.0));
+   int y = (int)(pow(128,(24.0-sc)/24.0));
    mn_led(mn,y);
    mn_led(mn+1,x);
 }
